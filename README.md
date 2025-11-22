@@ -55,10 +55,7 @@ docker-compose up --build
 ### 3. Acceder a la aplicación
 Abre tu navegador en: **http://localhost:4200**
 
-## 👤 Credenciales por Defecto
+## Credenciales por Defecto
 
 - **Usuario**: `admin`
 - **Contraseña**: `password123`
-
-## 📁 Estructura del Proyecto
-
