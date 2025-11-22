@@ -1,0 +1,63 @@
+services:
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - gateway
+    networks:
+      - microservices-net
+
+  gateway:
+    container_name: gateway
+    build: ./backend/gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - surveys-service
+      - responses-service
+      - reports-service
+    networks:
+      - microservices-net
+
+  surveys-service:
+    container_name: surveys-service
+    build: ./backend/surveys_service
+    volumes:
+      - surveys-data:/data
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/surveys"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  responses-service:
+    container_name: responses-service
+    build: ./backend/responses_service
+    volumes:
+      - responses-data:/data
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - microservices-net
+
+  reports-service:
+    container_name: reports-service
+    build: ./backend/reports_service
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  surveys-data:
+  responses-data:
